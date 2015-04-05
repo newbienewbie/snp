@@ -5,10 +5,8 @@
 
 ## webbot
 网络机器人模块，爬虫相关
-## db
-数据库模块
-## common
-通用模块
+
+
 
 ## pagination
 分页模块
@@ -44,6 +42,6 @@ Array
     [firstDigit] => 2
     [lastDigit] => 6
 )
-<a  href='index.php?page=1'><<</a><a  href='index.php?page=2'>2</a><a  href='index.php?page=3'>3</a><a  href='index.php?page=4'>4</a><a  href='index.php?page=5'>5</a><a  href='index.php?page=6'>6</a><a  href='index.php?page=11'>>></a>
+<a  href='index.php?page=1'>&lt;&lt;</a><a  href='index.php?page=2'>2</a><a  href='index.php?page=3'>3</a><a  href='index.php?page=4'>4</a><a  href='index.php?page=5'>5</a><a  href='index.php?page=6'>6</a><a  href='index.php?page=11'>&gt;&gt;</a>
 
 ```
