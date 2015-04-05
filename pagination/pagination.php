@@ -5,8 +5,8 @@ class Pagination extends PagesInfo{
     public $baseUrl='index.php?';
     public $cssClass='';
     public $queryParamName='page';
-    public $firstPageText="<<";
-    public $lastPageText=">>";
+    public $firstPageText="&lt;&lt;";
+    public $lastPageText="&gt;&gt;";
 
     private $cssClassSting=""; 
 
