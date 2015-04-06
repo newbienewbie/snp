@@ -7,6 +7,8 @@ class Pagination extends PagesInfo{
     public $queryParamName='page';
     public $firstPageText="&lt;&lt;";
     public $lastPageText="&gt;&gt;";
+    public $firstDigitText="&lt;";
+    public $lastDigitText="&gt;";
     public $space="<span>&nbsp;&nbsp;</span>";
 
     private $cssClassSting=""; 
@@ -34,13 +36,26 @@ class Pagination extends PagesInfo{
         echo "<a {$this->cssClassSting} href='{$this->baseUrl}{$this->queryParamName}={$info['firstPage']}'>";
         echo $this->firstPageText;
         echo "</a>";
-
+        
+        echo $this->space;
+        
+        echo "<a {$this->cssClassSting} href='{$this->baseUrl}{$this->queryParamName}={$info['firstDigit']}'>";
+        echo $this->firstDigitText;
+        echo "</a>";
+        echo $this->space;
+        
         $digits=range($info['firstDigit'],$info['lastDigit']);
-
         foreach($digits as $v){
             echo "<a {$this->cssClassSting} href='{$this->baseUrl}{$this->queryParamName}=$v'>$v</a>";
             echo $this->space;
         }
+        
+        echo "<a {$this->cssClassSting} href='{$this->baseUrl}{$this->queryParamName}={$info['lastDigit']}'>";
+        echo $this->lastDigitText;
+        echo "</a>";
+        echo $this->space;  
+       
+      
         
         //输出lastPage
         echo "<a {$this->cssClassSting} href='{$this->baseUrl}{$this->queryParamName}={$info['lastPage']}'>";
