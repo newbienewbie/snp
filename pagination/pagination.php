@@ -7,6 +7,7 @@ class Pagination extends PagesInfo{
     public $queryParamName='page';
     public $firstPageText="&lt;&lt;";
     public $lastPageText="&gt;&gt;";
+    public $space="<span>&nbsp;&nbsp;</span>";
 
     private $cssClassSting=""; 
 
@@ -38,6 +39,7 @@ class Pagination extends PagesInfo{
 
         foreach($digits as $v){
             echo "<a {$this->cssClassSting} href='{$this->baseUrl}{$this->queryParamName}=$v'>$v</a>";
+            echo $this->space;
         }
         
         //输出lastPage
