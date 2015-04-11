@@ -87,7 +87,7 @@
         'dgSelector':$('#dgPO'),
         'datagrid':{
             columns:[[
-                {title:"status",field:"status"},
+                {title:"status",field:"state"},
                 {title:"id",field:"id"},
                 {title:"user",field:"userid"},
                 {title:"product",field:"product_id"},
@@ -100,20 +100,22 @@
 
         "urlRemote":'index.php?m=product&c=product&a=jsonList&pc_hash='+pc_hash,
 
-        'urlPass':'index.php?m=yinhuan&c=yinhuan&a=authPass&pc_hash='+pc_hash+'&id=',
-        'urlRefuse':'index.php?m=yinhuan&c=yinhuan&a=authRefuse&pc_hash='+pc_hash+'&id=',
+        //以后要改成post方式
+        'urlPass':'index.php?m=product&c=product&a=authPass&pc_hash='+pc_hash+'&id=',
+
+        'urlRefuse':'index.php?m=product&c=product&a=authRefuse&pc_hash='+pc_hash+'&id=',
 
         'modalConfig':{
             'modalSelector':$('#detailModal'),
             'modalBodySelector':$('#selectionDlgBody'),
-            'urlRemote':'index.php?m=product&c=product&a=detailModalDisplay&pc_hash='+pc_hash+'&id=',
+            'urlModalBody':'index.php?m=product&c=product&a=detailModal&pc_hash='+pc_hash+'&id=',
         }
     };
 
     var dg=new AuthDatagridNS.AuthDatagrid(dgConfig);
 
     //配置datagrid
-     dg.createDatagrid();
+    dg.createDatagrid();
     //向其他控制器发送请求并加载数据
     dg.loadData();
     //添加按钮处理程序

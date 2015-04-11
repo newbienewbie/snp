@@ -50,7 +50,7 @@ AuthDatagridNS.AuthDatagrid=function(dgConfig){
     this.modalBodySelector=dgConfig.modalConfig.modalBodySelector;
     this.urlModalBody=dgConfig.modalConfig.urlModalBody;
 
-    //如果该对象及其原型链中找不到loadData()函数，则一次性添加相关方法到原型链
+    //如果该对象及其原型链中找不到loadData()函数，则一次性添加以下所有方法到原型链
     if(typeof this.loadData != 'function'){
 
         //createDatagrid()
@@ -74,11 +74,10 @@ AuthDatagridNS.AuthDatagrid=function(dgConfig){
         AuthDatagridNS.AuthDatagrid.prototype.showSelection=function(){
             that=this;
             $.get(that.urlModalBody,function(data){
-                alert('xxxxxxxxxx');
                 //load the remote 
-                that.modalSelector.html(data);
+                that.modalBodySelector.html(data);
                 //show the Modal 
-                that.modalBodySelector.modal({
+                that.modalSelector.modal({
                     'backdrop':false,
                     'keyboard':true,
                     'show':true
@@ -94,8 +93,11 @@ AuthDatagridNS.AuthDatagrid=function(dgConfig){
                 alert('请选择行项目！');
                 return;
             }
+            if(!confirm('确定要执行 通过 操作吗？')){
+                return ;
+            }
             var that=this;
-            $.get(that.urlPass,function(data){
+            $.get(that.urlPass+rowsSelected[0].id,function(data){
                 if($.parseJSON(data).authPass=='success'){
                     alert('审批通过');
                     that.loadData();
@@ -112,8 +114,11 @@ AuthDatagridNS.AuthDatagrid=function(dgConfig){
                 alert('请选择行项目！');
                 return;
             }
+            if(!confirm('确定要执行 退回 操作吗？')){
+                return ;
+            }
             var that=this;
-            $.get(that.urlRefuse,function(data){
+            $.get(that.urlRefuse+rowsSelected[0].id,function(data){
                 if($.parseJSON(data).authRefuse=='success'){
                     alert('退回成功');
                     that.loadData();
@@ -124,4 +129,3 @@ AuthDatagridNS.AuthDatagrid=function(dgConfig){
         };
     }
 }
-
