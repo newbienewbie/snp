@@ -38,6 +38,7 @@ AuthDatagridNS.DetailModal=function(modalConfig){
  */   
 AuthDatagridNS.AuthDatagrid=function(dgConfig){
 
+    
     this.dgSelector=dgConfig.dgSelector;
     this.datagridConfig=dgConfig.datagrid;
     //数据url
@@ -50,8 +51,8 @@ AuthDatagridNS.AuthDatagrid=function(dgConfig){
     this.modalBodySelector=dgConfig.modalConfig.modalBodySelector;
     this.urlModalBody=dgConfig.modalConfig.urlModalBody;
 
-    //如果该对象及其原型链中找不到loadData()函数，则一次性添加以下所有方法到原型链
-    if(typeof this.loadData != 'function'){
+    //如果该对象及其原型链中找不到createDatagrid()函数，则一次性添加以下所有方法到原型链
+    if(typeof this.createDatagrid != 'function'){
 
         //createDatagrid()
         AuthDatagridNS.AuthDatagrid.prototype.createDatagrid=function(){
@@ -59,14 +60,25 @@ AuthDatagridNS.AuthDatagrid=function(dgConfig){
         };
 
 
-        //loadData()
+        /** loadData()
+         *
+         * 向指定url请求JSON格式的字符串，
+         * 其内容类似于
+         * {
+         *     'rows':[],
+         *     'pagesInfo':[]
+         * }
+         *
+         */
         AuthDatagridNS.AuthDatagrid.prototype.loadData=function(){
             //为了在jQuery ajax函数中闭包函数中使用本对象
             var that=this;
             $.get(that.urlRemote,function(data){
-                that.dgSelector.datagrid('loadData',{rows:$.parseJSON(data)});
+                //为datagrid加载数据
+                that.dgSelector.datagrid('loadData',{rows:$.parseJSON(data).rows});
+                //更新分页器
+                //。。。
             });
-
         };
 
 
