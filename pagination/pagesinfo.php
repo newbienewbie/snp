@@ -110,10 +110,8 @@ class PagesInfo {
      *     array('currentPage',$page),
      *     array('nextPage',$page),
      *     array('lastPage','$page'),
-     *     array('digital'=>array(
-     *         ...
-     *     ))
-     *
+     *     array('firstDigit'=>$firstDigit),
+     *     array('firstDigit'=>$firstDigit)
      * }
      */
     public function generatePagesInfo($currentPage=1){
