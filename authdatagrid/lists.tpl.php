@@ -1,50 +1,44 @@
-<html>
-<head>
-    <script src='statics/js/jquery.js' > </script>
-    <link rel='stylesheet' href='statics/css/bootstrap.css'>
-    <!--[if lt IE 9]>
-      <script src="statics/js/html5shiv.js"></script>
-      <script src="statics/js/respond.min.js"></script>
-    <![endif]-->
-    <script src="statics/js/bootstrap.min.js"> </script>
-    <script src="statics/js/bootstrap.ourjs.js"> </script>
-</head>
-
-<body>
-
-
+<?php include $this->admin_tpl('header','product')?>
 <div class="container">
     <div class='main' class='row'>
 
-        <div class='row'> <!--功能列表-->
-            <div  class='col-md-4 '>
-                <a id='btnSelectionPass' class='btn btn-success' >通过</a>
+        <div class='row'>
+
+            <!--检索条件-->
+            <div class='col-md-3'>
+                <label for='stateFieldSelector'>审批状态</label>
+                <select id='stateFieldSelector' name='state' />
+                    <option  value='0'>0</option>
+                    <option  value='1'>1</option>
+                    <option  value='2'>2</option>
+                </select>
+                <a id='search' class='btn btn-warning'>检索</a>
             </div>
 
-            <div  class='col-md-4 '>
-                <a id='btnSelectionRefuse' class='btn btn-warning'  >驳回</a>
-            </div>
-
-            <div class='col-md-4'>
-                <a id='btnSelectionDetailModal' class='btn btn-info'>明细</a>
-            </div>
         </div>
 
+        <div class='row'> <!--功能列表-->
+            <div  class='col-md-4 '>
+                <button id='btnSelectionPass' class='btn btn-success' >通过</a>
+            </div>
+            <div  class='col-md-4 '>
+                <button id='btnSelectionRefuse' class='btn btn-warning'  >驳回</a>
+            </div>
+            <div class='col-md-4'>
+                <button id='btnSelectionDetailModal' class='btn btn-info'>明细</a>
+            </div>
+        </div>
 
         <div class="col-md-12"> <!--数据-->
             <table class="table table-hover" id="dgPO"></table> <!--数据表格之PO-->
         </div>
 
-        <div id='pager' class='col-md-6'> <!--分页-->
-            <a id='previousPage' class='btn'> &lt;&lt;</a>
-            <span><span>
-            <a id='nextPage' class='btn'> &gt;&gt;</a>
+        <div  class='col-md-6'> <!--分页-->
+            <ul id='pager' class='pagination'> </ul>
         </div>
 
     </div>
 </div>
-
-
 
 
 <!--用于显示详细内容的对话框-->
@@ -82,17 +76,27 @@
 
     var pc_hash=parent.window.pc_hash;
 
+    var pg=new AuthDatagridNS.Pagination({
+        'paginationSelector':'#pager',
+        'baseUrl':'http://localhost/phpcms/index.php?m=product&c=product&a=jsonList&'
+    });
+
+    var md=new AuthDatagridNS.DetailModal({
+        'modalSelector':'#detailModal',
+        'modalBodySelector':'#selectionDlgBody',
+        'urlModalBody':'index.php?m=product&c=product&a=detailModal&pc_hash='+pc_hash+'&id=',
+    });
+
     //数据表格审批配置
     var dgConfig={
-        'dgSelector':$('#dgPO'),
+        'dgSelector':'#dgPO',
         'datagrid':{
             columns:[[
-                {title:"status",field:"state"},
-                {title:"id",field:"id"},
-                {title:"user",field:"userid"},
-                {title:"product",field:"product_id"},
-                {title:"price",field:"price"},
-                {title:"审批",field:"auth"},
+                {title:"订单号",field:"id"},
+                {title:"用户",field:"user"},
+                {title:"奖品",field:"product"},
+                {title:"单价",field:"price"},
+                {title:"审批状态",field:"state"},
             ]],
             singleSelect:true,
             selectedClass:"danger"
@@ -101,15 +105,23 @@
         "urlRemote":'index.php?m=product&c=product&a=jsonList&pc_hash='+pc_hash,
 
         //以后要改成post方式
-        'urlPass':'index.php?m=product&c=product&a=authPass&pc_hash='+pc_hash+'&id=',
+        "passProcessor":{
+            'url':'index.php?m=product&c=product&a=authPass&pc_hash='+pc_hash+'&id=',
+            'method':'get',
+            'data':'',
+        },
 
-        'urlRefuse':'index.php?m=product&c=product&a=authRefuse&pc_hash='+pc_hash+'&id=',
+        "refuseProcessor":{
+            'url':'index.php?m=product&c=product&a=authRefuse&pc_hash='+pc_hash+'&id=',
+            'method':'get',
+            'data':'',
+        },
 
-        'modalConfig':{
-            'modalSelector':$('#detailModal'),
-            'modalBodySelector':$('#selectionDlgBody'),
-            'urlModalBody':'index.php?m=product&c=product&a=detailModal&pc_hash='+pc_hash+'&id=',
-        }
+        //明细对话框
+        'detailModal':md,
+        //分页器
+        'pagination':pg,
+
     };
 
     var dg=new AuthDatagridNS.AuthDatagrid(dgConfig);
@@ -119,22 +131,21 @@
     //向其他控制器发送请求并加载数据
     dg.loadData();
     //添加按钮处理程序
-    $('#btnSelectionPass').click(
-        function(){
-            dg.passSelection();
-        }
-    );
-    $('#btnSelectionRefuse').click(
-        function(){
-            dg.refuseSelection();
-        }
-    );
-    $('#btnSelectionDetailModal').click(
-        function(){
-            dg.showSelection();
-        }
-    );
+    $('#btnSelectionPass').click(function(){
+        dg.passSelection();
+    });
+    $('#btnSelectionRefuse').click(function(){
+        dg.refuseSelection();
+    });
+    $('#btnSelectionDetailModal').click(function(){
+        dg.showSelection();
+    });
 
+    $('#stateFieldSelector').change(function(){
+        var state=$(this).children('option:selected').val();
+        dg.urlRemote='index.php?m=product&c=product&a=jsonList&state='+state+'&pc_hash='+pc_hash;
+        dg.loadData();
+    });
 
 
 })();
